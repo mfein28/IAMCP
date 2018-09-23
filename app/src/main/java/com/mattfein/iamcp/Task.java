@@ -294,10 +294,6 @@ public class Task extends AppCompatActivity {
 
     }
 
-    public void onRadioButtonClicked(View view) {
-        boolean check = ((RadioButton) view).isChecked();
-
-    }
 }
 
 
