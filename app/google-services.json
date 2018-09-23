@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "368574582568",
+    "firebase_url": "https://iamcp-18.firebaseio.com",
+    "project_id": "iamcp-18",
+    "storage_bucket": "iamcp-18.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368574582568:android:3f232be9e9cf5aad",
+        "android_client_info": {
+          "package_name": "com.mattfein.iamcp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368574582568-i74tp8fnojln6efbe8pka6eevbkaqmqd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mattfein.iamcp",
+            "certificate_hash": "11c61597baf50f61a7a7b9ee44965ef98f2f30f3"
+          }
+        },
+        {
+          "client_id": "368574582568-a39boa8r0cuq1ggpke5vv0fi1kvh3q7l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mattfein.iamcp",
+            "certificate_hash": "47be92ef23c25df39a9c87a516a2da94195ceff5"
+          }
+        },
+        {
+          "client_id": "368574582568-qu75sih5809kpna42v8ctcpgd8nsp1p2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmmevt501yRRzhSDBk3m8PY1TuQkVLrNg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368574582568-qu75sih5809kpna42v8ctcpgd8nsp1p2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

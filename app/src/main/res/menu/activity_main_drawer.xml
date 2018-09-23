@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/profile"
+            android:icon="@drawable/profile"
+            android:title="Profile" />
+        <item
+            android:id="@+id/prepare"
+            android:icon="@drawable/prepare"
+            android:title="Review the issues" />
+        <item
+            android:id="@+id/events"
+            android:icon="@drawable/calnav"
+            android:title="Event Calendar" />
+
+    </group>
+
+    <item android:title="Find Us Online">
+        <menu>
+            <item
+                android:id="@+id/facebook"
+                android:icon="@drawable/facebook"
+                android:title="Facebook" />
+            <item
+                android:id="@+id/twitter"
+                android:icon="@drawable/twitter"
+                android:title="Twitter" />
+
+            <item
+                android:id="@+id/youtube"
+                android:icon="@drawable/youtube"
+                android:title="Youtube" />
+        </menu>
+    </item>
+
+</menu>
