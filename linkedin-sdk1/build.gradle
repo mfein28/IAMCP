@@ -47,6 +47,5 @@ dependencies {
     implementation 'com.android.support:support-annotations:20.0.0'
     implementation 'com.android.support:support-v4:21.0.+'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation files('libs/volley.jar')
     androidTestCompile('junit:junit:4.12')
 }

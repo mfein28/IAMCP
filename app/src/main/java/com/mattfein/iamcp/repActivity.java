@@ -56,7 +56,7 @@ public class repActivity extends AppCompatActivity {
 
         alert.show();
 
-
+        Log.e("test", "test");
 
     }
 
