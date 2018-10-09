@@ -78,6 +78,7 @@ public class Task extends AppCompatActivity {
         final FirebaseUser fbUser = mAuth.getCurrentUser();
 
         final String fbUserEmail = fbUser.getEmail();
+        Log.e("Emaill", fbUserEmail);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,6 +112,7 @@ public class Task extends AppCompatActivity {
         CollectionReference allUsers = db.collection("Task");
         final String finalIssueArea = issueArea;
         final String finalTaskDescription = taskDescription;
+        final String finalEmail = fbUser;
         allUsers.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull com.google.android.gms.tasks.Task<QuerySnapshot> task) {
@@ -120,7 +122,7 @@ public class Task extends AppCompatActivity {
                     int shouldCreCheck = 0;
                     for (DocumentSnapshot document : task.getResult()) {
                         String email = document.getString(ADVOCATE_USER);
-                        if (email.equals(fbUser)) {
+                        if (fbUser.equals(finalEmail)) {
                             shouldCreCheck = 1;
                             Log.d("TAG", "Username found");
                             getCurrentArray(fbUser, finalIssueArea, activityType, finalTaskDescription);

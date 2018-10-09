@@ -29,6 +29,7 @@ public class AdvocateDashboard extends Fragment {
     ConstraintLayout advocateIncomplete, advocateComplete, policyIncomplete, policyComplete, repIncomplete, repComplete;
     Intent advocateActivity, issueActivity, repActivity;
     Boolean advocateRead, repRead, issueRead;
+    RelativeLayout layout;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -56,6 +57,7 @@ public class AdvocateDashboard extends Fragment {
         advocateCard = v.findViewById(R.id.advocateCard);
         advocateIncomplete = v.findViewById(R.id.advocateIncomplete);
         advocateComplete = v.findViewById(R.id.advocateComplete);
+
         repIncomplete = v.findViewById(R.id.repIncomplete);
         repComplete = v.findViewById(R.id.repComplete);
         policyIncomplete = v.findViewById(R.id.polIncomplete);

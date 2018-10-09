@@ -2,14 +2,13 @@ package com.mattfein.iamcp;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.widget.ExpandableListView;
 
-import com.google.common.collect.Lists;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mattfein.iamcp.adapters.issueExpandableList;
 
 import java.util.ArrayList;
 import java.util.HashMap;

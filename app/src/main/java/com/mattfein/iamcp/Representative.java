@@ -1,16 +1,19 @@
 package com.mattfein.iamcp;
 
-public class Representative {
-    String name, party, state, district, phone, office, link;
+import java.util.Map;
 
-    public Representative(String name, String party, String state, String district, String phone, String office, String link) {
+public class Representative {
+    String name, address, party, phones, urls, photourl;
+    Map<String, String> channels;
+
+    public Representative(String name, String address, String party, String phones, String urls, String photourl, Map<String, String> channels) {
         this.name = name;
+        this.address = address;
         this.party = party;
-        this.state = state;
-        this.district = district;
-        this.phone = phone;
-        this.office = office;
-        this.link = link;
+        this.phones = phones;
+        this.urls = urls;
+        this.photourl = photourl;
+        this.channels = channels;
     }
 
     public String getName() {
@@ -21,25 +24,23 @@ public class Representative {
         return party;
     }
 
-    public String getState() {
-        return state;
+    public String getAddress() {
+        return address;
     }
 
-    public String getDistrict() {
-        return district;
+    public String getPhones() {
+        return phones;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getUrls() {
+        return urls;
     }
 
-    public String getOffice() {
-        return office;
+    public String getPhotourl() {
+        return photourl;
     }
 
-    public String getLink() {
-        return link;
+    public Map<String, String> getChannels() {
+        return channels;
     }
-
-
 }

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Profile">
+    tools:context=".Profile"
+    android:id="@+id/frameProf">
 
 
     <android.support.constraint.ConstraintLayout
@@ -12,11 +13,12 @@
         android:layout_height="match_parent">
 
         <android.support.v7.widget.CardView
+            android:id="@+id/cardView2"
             android:layout_width="350dp"
             android:layout_height="170dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             app:cardCornerRadius="15dp"
             app:cardElevation="5dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -25,12 +27,7 @@
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"><![CDATA[
-
-                android:layout_width="wrap_content"
                 android:layout_height="match_parent">
-
-                ]]>
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profileImage"
@@ -38,10 +35,10 @@
                     android:layout_height="80dp"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     android:src="@mipmap/ic_launcher_round"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/relativeLayout2"
@@ -52,9 +49,9 @@
                     android:id="@+id/relativeLayout2"
                     android:layout_width="250dp"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -73,10 +70,10 @@
                         android:id="@+id/organization_name"
                         android:layout_width="210dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
-                        android:layout_marginEnd="61dp"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginTop="38dp"
+                        android:layout_marginEnd="61dp"
                         android:text="Tulane University"
                         android:textAppearance="@android:style/TextAppearance.Material.Medium"
                         android:textColor="@color/colorPrimary"
@@ -86,8 +83,8 @@
                         android:id="@+id/primary_policy_concern_title"
                         android:layout_width="210dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignStart="@+id/organization_name"
                         android:layout_below="@+id/primary_policy_concern"
+                        android:layout_alignStart="@+id/organization_name"
                         android:text="Computer Science Education"
                         android:textColor="@color/colorLight"
                         android:textSize="16sp"
@@ -131,6 +128,27 @@
             </android.support.constraint.ConstraintLayout>
 
         </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/profileRecycle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView2"
+            app:layout_constraintVertical_bias="0.162">
+
+        </android.support.v7.widget.RecyclerView>
+
 
 
     </android.support.constraint.ConstraintLayout>

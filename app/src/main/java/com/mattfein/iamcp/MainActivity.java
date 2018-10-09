@@ -2,20 +2,18 @@ package com.mattfein.iamcp;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -27,17 +25,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.Lists;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,23 +40,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.mattfein.iamcp.adapters.NewsFeedAdapter;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 
 
 public class MainActivity extends AppCompatActivity
@@ -101,6 +83,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        fixInvisibility();
+
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -127,6 +112,17 @@ public class MainActivity extends AppCompatActivity
 
 
 
+    }
+
+    private void fixInvisibility() {
+        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View profile = inflater.inflate(R.layout.fragment_profile, null);
+        FrameLayout Layprofile = (FrameLayout) profile.findViewById(R.id.frameProf);
+        Layprofile.setVisibility(View.GONE);
+        View dashboardView = inflater.inflate(R.layout.fragment_advocte_dashboard, null);
+        LayoutInflater.from(this).inflate(R.layout.fragment_advocte_dashboard, null);
+        RelativeLayout dashboard = (RelativeLayout) dashboardView.findViewById(R.id.dashLay);
+        dashboard.setVisibility(View.GONE);
     }
 
     private void setUpNewsFeed() {
@@ -286,8 +282,15 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
 
         if (id == R.id.profile) {
+            View dashboardView = inflater.inflate(R.layout.fragment_advocte_dashboard, null);
+            LayoutInflater.from(this).inflate(R.layout.fragment_advocte_dashboard, null);
+            RelativeLayout dashboard = (RelativeLayout) dashboardView.findViewById(R.id.dashLay);
+            dashboard.setVisibility(View.GONE);
+
             android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
             android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
             mainFab.setVisibility(View.GONE);
@@ -295,9 +298,13 @@ public class MainActivity extends AppCompatActivity
             feedLayout.setVisibility(View.GONE);
             taskLay.clearAnimation();
             taskLay.setClickable(false);
-            transaction.add(R.id.frame, new Profile()).commit();
+            transaction.replace(R.id.frame, new Profile()).commit();
 
         } else if (id == R.id.prepare) {
+
+            View profile = inflater.inflate(R.layout.fragment_profile, null);
+            FrameLayout Layprofile = (FrameLayout) profile.findViewById(R.id.frameProf);
+            Layprofile.setVisibility(View.GONE);
             android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
             android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
             mainFab.setVisibility(View.GONE);
@@ -305,7 +312,7 @@ public class MainActivity extends AppCompatActivity
             feedLayout.setVisibility(View.GONE);
             taskLay.clearAnimation();
             taskLay.setClickable(false);
-            transaction.add(R.id.frame, new AdvocateDashboard()).commit();
+            transaction.replace(R.id.frame, new AdvocateDashboard()).commit();
 
 
         } else if (id == R.id.events) {
@@ -316,7 +323,7 @@ public class MainActivity extends AppCompatActivity
             taskLay.setVisibility(View.GONE);
             taskLay.clearAnimation();
             taskLay.setClickable(false);
-            transaction.add(R.id.frame, new Events()).commit();
+            transaction.replace(R.id.frame, new Events()).commit();
 
 
 

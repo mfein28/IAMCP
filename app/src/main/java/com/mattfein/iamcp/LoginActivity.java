@@ -33,8 +33,7 @@ package com.mattfein.iamcp;
         import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
         import com.google.firebase.auth.FirebaseUser;
         import com.google.firebase.auth.PhoneAuthCredential;
-        import com.google.firebase.auth.PhoneAuthProvider;
-        import com.google.firebase.auth.UserProfileChangeRequest;
+
         import com.google.firebase.firestore.FirebaseFirestore;
         import com.linkedin.platform.APIHelper;
         import com.linkedin.platform.LISessionManager;
@@ -223,6 +222,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             passwordField.setError(null);
         }
 
+
+
         return valid;
     }
 
@@ -279,6 +280,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
                             }
+
+
 
                             @Override
                             public void onApiError(LIApiError LIApiError) {
