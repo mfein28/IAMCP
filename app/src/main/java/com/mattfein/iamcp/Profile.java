@@ -29,7 +29,9 @@ import com.mattfein.iamcp.adapters.ProfileAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -49,6 +51,7 @@ public class Profile extends Fragment {
     private static final String activityType = "activityType";
     FirebaseAuth mAuth;
     RecyclerView proNews;
+    Map.Entry<String, Integer> mainInterest = null;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
    // final String liLink, currentName, organizationName, stringtaskCount;
     int taskCount;
@@ -135,20 +138,34 @@ public class Profile extends Fragment {
 
                  try{
                      taskCount = taskList.size();
-                     final String stringtaskCount = Integer.toString(taskCount);
+                     HashMap<String, Integer> mostCommon = new HashMap<>();
+                     for(int i = 0; i < taskList.size(); i++){
+                            if(mostCommon.containsKey(taskList.get(i))){
+                                mostCommon.put(taskList.get(i), mostCommon.get(taskList.get(i)+ 1));
+                         }
+                         else{
+                                mostCommon.put(taskList.get(i), 1);
+                            }
+                     }
+
+                     for(Map.Entry<String, Integer> entry: mostCommon.entrySet()){
+                         if(mainInterest == null || entry.getValue().compareTo(mainInterest.getValue()) > 0){
+                             mainInterest = entry;
+                         }
+                     }
                  }
                  catch(NullPointerException e){
                      numTasks.setText(0);
                      Log.e("Task Count", "Error");
                  }
-
+                final String mainInterestString = mainInterest.getKey();
                  final String stringtaskCount = Integer.toString(taskCount);
                  Log.e("This is task:", stringtaskCount);
                  Log.e("This is userName:", currentName);
                  name.setText(currentName);
                  organization.setText(organizationName);
                  numTasks.setText(stringtaskCount);
-
+                 primaryConcern.setText(mainInterestString);
                  Picasso.get().load(liLink).into(proPic);
 
             }

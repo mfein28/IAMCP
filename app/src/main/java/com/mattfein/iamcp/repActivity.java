@@ -23,6 +23,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.gson.JsonArray;
 import com.mattfein.iamcp.adapters.RepAdapter;
 
@@ -47,34 +52,14 @@ public class repActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rep);
         Window window = getWindow();
         window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        locationListener = (LocationListener) new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        final FirebaseUser fbUser = mAuth.getCurrentUser();
+        final String fbUserEmail = fbUser.getEmail();
 
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-
-        };
-
-        setUpAlertDialogue();
+        setUpAlertDialogue(fbUserEmail);
     }
 
-    private void setUpAlertDialogue() {
+    private void setUpAlertDialogue(String usersEmail) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         final EditText edittext = new EditText(getApplicationContext());
         alert.setMessage("This will be use to find your representatives.");
@@ -91,7 +76,7 @@ public class repActivity extends AppCompatActivity {
                 String stringCity = city.getText().toString();
                 String stringZip = zip.getText().toString();
                 String finalstringAddress = stringAddress + " "+ stringCity + " " + stringZip;
-                  getInfo(finalstringAddress);
+                getInfo(finalstringAddress, usersEmail);
 
 
             }
@@ -101,11 +86,15 @@ public class repActivity extends AppCompatActivity {
 
 
 
+
         Log.e("test", "test");
 
     }
 
-    private void getInfo(String address) {
+
+
+
+    private void getInfo(String address, String userEmail) {
         address = address.replace(" ", "+");
         String url = "https://www.googleapis.com/civicinfo/v2/representatives?address=" + address + "&includeOffices=true&levels=country&roles=legislatorUpperBody&roles=legislatorLowerBody&key=AIzaSyAmmevt501yRRzhSDBk3m8PY1TuQkVLrNg";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>(){
@@ -165,7 +154,7 @@ public class repActivity extends AppCompatActivity {
                         }
                         RecyclerView recyclerView = findViewById(R.id.repRecycle);
                         Context context = recyclerView.getContext();
-                        RepAdapter repAdapter = new RepAdapter(recyclerView, mUrls, mPics, mNames, mParties, mPhones, mChannels, context);
+                        RepAdapter repAdapter = new RepAdapter(recyclerView, mUrls, mPics, mNames, mParties, mPhones, mChannels, context, userEmail);
                         recyclerView.setAdapter(repAdapter);
                         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 

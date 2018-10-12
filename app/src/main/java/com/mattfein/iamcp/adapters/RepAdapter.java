@@ -18,6 +18,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.mattfein.iamcp.R;
 import com.squareup.picasso.Picasso;
 
@@ -40,8 +44,11 @@ public class RepAdapter extends RecyclerView.Adapter<RepAdapter.ViewHolder>{
     private RecyclerView recyclerView;
     int lastPosition;
     View view;
+    private static final String REPCOUNT = "isRepRead";
+    private String mUserEmail;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public RepAdapter(RecyclerView recyclerView, ArrayList<String> URLs, ArrayList<String> RepPicsList, ArrayList<String> Names, ArrayList<String> Parties, ArrayList<String> Phone, ArrayList<Map<String, String>> channel, Context Context) {
+    public RepAdapter(RecyclerView recyclerView, ArrayList<String> URLs, ArrayList<String> RepPicsList, ArrayList<String> Names, ArrayList<String> Parties, ArrayList<String> Phone, ArrayList<Map<String, String>> channel, Context Context, String usersEmail) {
         this.mRepPicsList = RepPicsList;
         this.recyclerView = recyclerView;
         this.mNames = Names;
@@ -50,6 +57,7 @@ public class RepAdapter extends RecyclerView.Adapter<RepAdapter.ViewHolder>{
         this.mContext = Context;
         this.mUrls = URLs;
         this.mChannel = channel;
+        this.mUserEmail = usersEmail;
     }
 
 
@@ -59,7 +67,24 @@ public class RepAdapter extends RecyclerView.Adapter<RepAdapter.ViewHolder>{
     public RepAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         view = LayoutInflater.from(parent.getContext()).inflate(R.layout.replistitem, parent, false);
         ViewHolder holder = new ViewHolder(view);
+        iterateRep();
         return holder;
+    }
+
+    public void iterateRep(){
+        final DocumentReference query = db.collection("Task").document(mUserEmail);
+        query.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Long currentStatus = (Long) documentSnapshot.get(REPCOUNT);
+                currentStatus = currentStatus + 1;
+                query.update(REPCOUNT, currentStatus);
+
+
+
+            }
+        });
+
     }
 
     @Override

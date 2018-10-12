@@ -66,8 +66,9 @@ public class MainActivity extends AppCompatActivity
     private static final String Names_News = "Names";
     private static final String LI_URL_NEWS = "LIUrls";
     private static final String ActivityDescriptions_NEWS = "ActivityDescriptions";
+    private static final String EXTRA_DETAILS = "extraDetails";
 
-    ConstraintLayout plusFab,  taskLay;
+    ConstraintLayout  taskLay;
     RelativeLayout feedLayout;
     FloatingActionButton mainFab;
     SwipeRefreshLayout swipeLayout;
@@ -134,26 +135,33 @@ public class MainActivity extends AppCompatActivity
                 List<String> currentLIArray = new ArrayList<>();
                 List<String> currentActivityArray = new ArrayList<>();
                 List<String> currentIssueArray = new ArrayList<>();
+                List<String> currentExtraDetailsArray = new ArrayList<>();
+
                 currentIssueArray = (List<String>) documentSnapshot.get(ISSUE_AREA_News);
                 currentIssueArray = Lists.reverse(currentIssueArray);
 
                 currentLIArray = (List<String>) documentSnapshot.get(LI_URL_NEWS);
                 currentLIArray = Lists.reverse(currentLIArray);
+
                 currentActivityArray = (List<String>) documentSnapshot.get(ActivityDescriptions_NEWS);
                 currentActivityArray = Lists.reverse(currentActivityArray);
+
                 currentNameArray = (List<String>) documentSnapshot.get(Names_News);
                 currentNameArray = Lists.reverse(currentNameArray);
-                initRecyclerView(currentNameArray, currentLIArray, currentActivityArray, currentIssueArray);
+
+                currentExtraDetailsArray = (List<String>) documentSnapshot.get(EXTRA_DETAILS);
+                currentExtraDetailsArray = Lists.reverse(currentExtraDetailsArray);
+                initRecyclerView(currentNameArray, currentLIArray, currentActivityArray, currentIssueArray, currentExtraDetailsArray);
             }
         });
 
     }
 
-    private void initRecyclerView(List<String> currentNameArray, List<String> currentLIArray, List<String> currentActivityArray, List<String> currentIssueArray){
+    private void initRecyclerView(List<String> currentNameArray, List<String> currentLIArray, List<String> currentActivityArray, List<String> currentIssueArray, List<String> currentExtraArray){
         Log.d("Main Activity: ", "initRecyclerView");
         RecyclerView recyclerView = findViewById(R.id.newsfeedrecycle);
 
-        NewsFeedAdapter adapter = new NewsFeedAdapter(this, currentNameArray, currentIssueArray, currentActivityArray, currentLIArray);
+        NewsFeedAdapter adapter = new NewsFeedAdapter(this, currentNameArray, currentIssueArray, currentActivityArray, currentLIArray, currentExtraArray);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         swipeLayout.setRefreshing(false);

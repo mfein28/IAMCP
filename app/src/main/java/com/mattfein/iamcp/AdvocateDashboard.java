@@ -94,7 +94,7 @@ public class AdvocateDashboard extends Fragment {
                     policyIncomplete.setVisibility(View.GONE);
                     policyComplete.setVisibility(View.VISIBLE);
                 }
-                if(currentRepStatus >= 4){
+                if(currentRepStatus >= 1){
                     repIncomplete.setVisibility(View.GONE);
                     repComplete.setVisibility(View.VISIBLE);
                 }

@@ -2,15 +2,19 @@ package com.mattfein.iamcp.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mattfein.iamcp.R;
 import com.squareup.picasso.Picasso;
@@ -25,18 +29,20 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
     private static final String TAG = "RecyclerViewAdapter";
     private List<String> mNames = new ArrayList<>();
     private List<String> mIssueArea = new ArrayList<>();
+    private List<String> mExtraDetails = new ArrayList<>();
     private List<String> mactivityDescription = new ArrayList<>();
     private List<String> mProPicLink = new ArrayList<>();
     private Context mContext;
     View view;
 
 
-    public NewsFeedAdapter(Context context, List<String> Names, List<String> IssueAreas, List<String> ActivityDescription, List<String> ProPicLink){
+    public NewsFeedAdapter(Context context, List<String> Names, List<String> IssueAreas, List<String> ActivityDescription, List<String> ProPicLink, List<String> ExtraDetails){
         mNames = Names;
         mIssueArea = IssueAreas;
         mactivityDescription = ActivityDescription;
         mProPicLink = ProPicLink;
         mContext = context;
+        mExtraDetails = ExtraDetails;
     }
     @NonNull
     @Override
@@ -54,6 +60,28 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         holder.activityDescription.setText(mactivityDescription.get(position));
         CardView cardView = view.findViewById(R.id.cardView);
         setAnimation(cardView, position);
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("We clicked", "woop");
+                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+                AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                final View newsPopup = inflater.inflate(R.layout.newsfeedalert, null);
+                CircleImageView proPic = (CircleImageView) newsPopup.findViewById(R.id.popupPro);
+                TextView popUpName = newsPopup.findViewById(R.id.usersname);
+                TextView issueAreaPop = newsPopup.findViewById(R.id.issueArearecyclepopUp);
+                TextView activityDescPop = newsPopup.findViewById(R.id.activityDescriptionPop);
+                TextView extraDetailsPop = newsPopup.findViewById(R.id.extraDetailsText);
+                Picasso.get().load(mProPicLink.get(position)).into(proPic);
+                popUpName.setText(mNames.get(position));
+                issueAreaPop.setText(mIssueArea.get(position));
+                activityDescPop.setText(mactivityDescription.get(position));
+                extraDetailsPop.setText(mExtraDetails.get(position));
+
+                alert.setView(newsPopup);
+                alert.show();
+            }
+        });
 
 
         //Set onClickListener Here

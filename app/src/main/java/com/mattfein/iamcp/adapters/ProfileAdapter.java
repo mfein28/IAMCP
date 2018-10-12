@@ -47,13 +47,13 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         holder.activityDescription.setText(mActivityDescription.get(position));
         holder.recyclerIssueArea.setText(mIssueAreas.get(position));
         CardView cardView = view.findViewById(R.id.cardView);
-        if(position % 2 == 0){
+        if(position % 3 == 0){
             cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.gray));
         }
-        if(position % 3 == 0){
+        if(position % 3 == 1){
             cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.colorLight));
         }
-        else{
+        if(position % 3 == 2){
             cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
         }
 

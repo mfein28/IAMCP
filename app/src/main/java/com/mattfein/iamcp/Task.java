@@ -55,6 +55,8 @@ public class Task extends AppCompatActivity {
     //NewsFeed
     private static final String ISSUE_AREA_News = "IssueAreas";
     private static final String Names_News = "Names";
+    private static final String EXTRADETAILS = "extraDetails";
+    private static final String USEREXTRA = "taskDescription";
     private static final String LI_URL_NEWS = "LIUrls";
     private static final String ActivityDescriptions_NEWS = "ActivityDescriptions";
 
@@ -68,6 +70,7 @@ public class Task extends AppCompatActivity {
         setContentView(R.layout.activity_task);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         final EditText otherIssue = (EditText) findViewById(R.id.otherissue);
+        taskDescriptionBox = (EditText) findViewById(R.id.taskDescription);
         setSupportActionBar(toolbar);
         Intent task = getIntent();
         Window window = getWindow();
@@ -91,6 +94,7 @@ public class Task extends AppCompatActivity {
 
     private void saveTask(final String fbUser, EditText otherText) {
         String issueArea = null;
+        String extraDetails = null;
         String taskDescription = null;
         if (isOther == true) {
             String issueCheck = otherText.getText().toString();
@@ -112,6 +116,7 @@ public class Task extends AppCompatActivity {
         CollectionReference allUsers = db.collection("Task");
         final String finalIssueArea = issueArea;
         final String finalTaskDescription = taskDescription;
+        final String finalextraDetails = extraDetails;
         final String finalEmail = fbUser;
         allUsers.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -130,14 +135,14 @@ public class Task extends AppCompatActivity {
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            Toast.makeText(Task.this, "Task Submitted", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(Task.this, "Report Submitted", Toast.LENGTH_SHORT).show();
                                             finish();
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(Task.this, "Task Not Submitted", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(Task.this, "Report Not Submitted", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                         }
@@ -168,7 +173,7 @@ public class Task extends AppCompatActivity {
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                 String liLink = documentSnapshot.getString("linkedinPro");
                                 String currentName = documentSnapshot.getString("Name");
-                                setNewsArray(currentName, finalIssueArea, activityType, liLink);
+                                setNewsArray(currentName, finalIssueArea, activityType, extraDetails, liLink);
                             }
 
                         });
@@ -181,7 +186,7 @@ public class Task extends AppCompatActivity {
     }
 
 
-    private void setNewsArray(final String Name, final String finalIssueArea, final String activityType, final String LIURL) {
+    private void setNewsArray(final String Name, final String finalIssueArea, final String activityType, final String activityDescription, final String LIURL) {
         DocumentReference query = db.collection("NewsFeed").document("NdhRlwTPvHUH8kerFyU5");
         query.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -190,18 +195,23 @@ public class Task extends AppCompatActivity {
                 List<String> currentLIArray = new ArrayList<>();
                 List<String> currentActivityArray = new ArrayList<>();
                 List<String> currentIssueArray = new ArrayList<>();
+                List<String> currentExtraArray = new ArrayList<>();
+
                 currentIssueArray = (List<String>) documentSnapshot.get(ISSUE_AREA_News);
                 currentLIArray = (List<String>) documentSnapshot.get(LI_URL_NEWS);
                 currentActivityArray = (List<String>) documentSnapshot.get(ActivityDescriptions_NEWS);
                 currentNameArray = (List<String>) documentSnapshot.get(Names_News);
+                currentExtraArray = (List<String>) documentSnapshot.get(EXTRADETAILS);
 
                 currentActivityArray.add(activityType);
                 currentNameArray.add(Name);
                 currentLIArray.add(LIURL);
+                currentExtraArray.add(activityDescription);
                 currentIssueArray.add(finalIssueArea);
 
                 db.collection("NewsFeed").document("NdhRlwTPvHUH8kerFyU5").update(ISSUE_AREA_News, currentIssueArray);
                 db.collection("NewsFeed").document("NdhRlwTPvHUH8kerFyU5").update(ActivityDescriptions_NEWS, currentActivityArray);
+                db.collection("NewsFeed").document("NdhRlwTPvHUH8kerFyU5").update(EXTRADETAILS, currentExtraArray);
                 db.collection("NewsFeed").document("NdhRlwTPvHUH8kerFyU5").update(Names_News, currentNameArray);
                 db.collection("NewsFeed").document("NdhRlwTPvHUH8kerFyU5").update(LI_URL_NEWS, currentLIArray);
 
@@ -212,7 +222,7 @@ public class Task extends AppCompatActivity {
 
     }
 
-    private void getCurrentArray(final String userEmail, final String newIssueArea, final String newActivityType, final String extraDetails) {
+    private void getCurrentArray(final String userEmail, final String newIssueArea, final String newActivityType, final String newExtraDetails) {
         final DocumentReference query = db.collection("Task").document(userEmail);
         query.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -223,7 +233,7 @@ public class Task extends AppCompatActivity {
                 if (documentSnapshot.exists()) {
                     if (documentSnapshot.get(ACTIVITY_TYPE).equals("new")) {
 
-                        newExtraDetailsArray.add(extraDetails);
+                        newExtraDetailsArray.add(newExtraDetails);
                         newActivityArray.add(newActivityType);
                         newIssueArray.add(newIssueArea);
 
@@ -234,17 +244,17 @@ public class Task extends AppCompatActivity {
                         newExtraDetailsArray = (List<String>) documentSnapshot.get(DESCRIPTION_ARRAY);
                         newIssueArray.add(newIssueArea);
                         newActivityArray.add(newActivityType);
-                        newExtraDetailsArray.add(extraDetails);
-                        newExtraDetailsArray.add(extraDetails);
+                        newExtraDetailsArray.add(newExtraDetails);
                     }
 
                     db.collection("Task").document(userEmail).update(ACTIVITY_TYPE, newActivityArray);
                     db.collection("Task").document(userEmail).update(ISSUE_AREA, newIssueArray);
+                    db.collection("Task").document(userEmail).update(USEREXTRA, newExtraDetailsArray);
                     db.collection("Task").document(userEmail).update(DESCRIPTION_ARRAY, newExtraDetailsArray);
 
                     String currentName = documentSnapshot.getString("Name");
                     String liLink = documentSnapshot.getString("linkedinPro");
-                    setNewsArray(currentName, newIssueArea, newActivityType, liLink);
+                    setNewsArray(currentName, newIssueArea, newActivityType, newExtraDetails, liLink);
 
                 }
             }
@@ -266,11 +276,13 @@ public class Task extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (issueAreaSpin.getSelectedItem().equals("Other")) {
                     otherIssue.setVisibility(View.VISIBLE);
+                    issueAreaSpin.setVisibility(View.GONE);
                     isOther = true;
                 }
                 if (!issueAreaSpin.getSelectedItem().equals("Other")) {
                     isOther = false;
                     otherIssue.setVisibility(View.GONE);
+                    issueAreaSpin.setVisibility(View.VISIBLE);
                 }
 
             }

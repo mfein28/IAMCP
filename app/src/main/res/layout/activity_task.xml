@@ -42,16 +42,16 @@
         android:id="@+id/infoLayout"
         android:layout_width="match_parent"
         android:layout_height="367dp"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="84dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="84dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-        app:layout_constraintVertical_bias="0.375">
+        app:layout_constraintVertical_bias="0.0">
 
 
         <TextView
@@ -73,27 +73,30 @@
 
         <Spinner
             android:id="@+id/issueareaspinner"
-            android:layout_width="200dp"
+            android:layout_width="338dp"
             android:layout_height="35dp"
-            android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/issueArea"
-            android:layout_marginEnd="28dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignStart="@+id/issueArea"
+            android:layout_marginTop="35dp"
+            android:layout_marginEnd="45dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
 
         <EditText
             android:id="@+id/otherissue"
-            android:layout_width="194dp"
+            android:layout_width="338dp"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/issueareaspinner"
-            android:layout_below="@+id/issueareaspinner"
+            android:layout_marginStart="2dp"
             android:ems="10"
-            android:visibility="gone"
+            android:layout_alignStart="@+id/issueArea"
             android:hint="Other Issue"
             android:inputType="textPersonName"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="35dp"
+            android:layout_marginEnd="45dp"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
 
 
@@ -103,6 +106,8 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/issueArea"
             android:layout_alignTop="@+id/activitytype"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="-33dp"
             android:text="Activity Type: "
             android:textAppearance="@android:style/TextAppearance.Material.Title"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -114,18 +119,19 @@
 
         <Spinner
             android:id="@+id/activitytype"
-            android:layout_width="200dp"
+            android:layout_width="338dp"
             android:layout_height="35dp"
+            android:layout_alignStart="@+id/issueArea"
             android:layout_alignParentTop="true"
-            android:layout_alignStart="@+id/issueareaspinner"
-            android:layout_marginTop="117dp" />
+            android:layout_marginStart="-1dp"
+            android:layout_marginTop="132dp" />
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignStart="@+id/issueArea"
+            android:layout_alignParentBottom="true"
             android:layout_marginBottom="145dp"
             android:text="Additional Details: "
             android:textAppearance="@android:style/TextAppearance.Material.Title" />
@@ -134,8 +140,8 @@
             android:id="@+id/taskDescription"
             android:layout_width="345dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignStart="@+id/issueArea"
+            android:layout_alignParentBottom="true"
             android:layout_marginBottom="79dp"
             android:hint="Enter any additional details here"
             tools:layout_editor_absoluteX="0dp"
