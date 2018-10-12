@@ -155,7 +155,7 @@ public class Profile extends Fragment {
                      }
                  }
                  catch(NullPointerException e){
-                     numTasks.setText(0);
+                     numTasks.setText("0");
                      Log.e("Task Count", "Error");
                  }
                 final String mainInterestString = mainInterest.getKey();

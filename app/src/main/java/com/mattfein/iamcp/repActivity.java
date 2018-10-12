@@ -62,7 +62,7 @@ public class repActivity extends AppCompatActivity {
     private void setUpAlertDialogue(String usersEmail) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         final EditText edittext = new EditText(getApplicationContext());
-        alert.setMessage("This will be use to find your representatives.");
+        alert.setMessage("It will be used to find your representatives and will not be saved.");
         alert.setTitle("Enter an address:");
         final View alertLayout = getLayoutInflater().inflate(R.layout.alertdialog, null);
         alert.setView(alertLayout);
