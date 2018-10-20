@@ -27,14 +27,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHolder>{
 
     private static final String TAG = "RecyclerViewAdapter";
-    private List<String> mNames = new ArrayList<>();
-    private List<String> mIssueArea = new ArrayList<>();
-    private List<String> mExtraDetails = new ArrayList<>();
-    private List<String> mactivityDescription = new ArrayList<>();
-    private List<String> mProPicLink = new ArrayList<>();
-    private List<String> mDates = new ArrayList<>();
+    private List<String> mNames;
+    private List<String> mIssueArea;
+    private List<String> mExtraDetails;
+    private List<String> mactivityDescription;
+    private List<String> mProPicLink;
+    private List<String> mDates;
     private Context mContext;
-    View view;
+    private View view;
 
 
     public NewsFeedAdapter(Context context, List<String> Names, List<String> IssueAreas, List<String> ActivityDescription, List<String> ProPicLink, List<String> ExtraDetails, List<String> Dates){
@@ -70,7 +70,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
                 LayoutInflater inflater = (LayoutInflater) mContext.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
                 AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
                 final View newsPopup = inflater.inflate(R.layout.newsfeedalert, null);
-                CircleImageView proPic = (CircleImageView) newsPopup.findViewById(R.id.popupPro);
+                CircleImageView proPic = newsPopup.findViewById(R.id.popupPro);
                 TextView popUpName = newsPopup.findViewById(R.id.usersname);
                 TextView popUpDate = newsPopup.findViewById(R.id.alertDate);
                 TextView issueAreaPop = newsPopup.findViewById(R.id.issueArearecyclepopUp);
@@ -111,7 +111,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
         TextView userName, recyclerIssueArea, activityDescription, timeStampText;
         CardView cardView;
 
-        public ViewHolder(View itemView) {
+        private ViewHolder(View itemView) {
             super(itemView);
             proPic = itemView.findViewById(R.id.recyclerviewImage);
             parentLayout = itemView.findViewById(R.id.parentLayout);

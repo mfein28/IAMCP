@@ -85,20 +85,20 @@ public class MainActivity extends AppCompatActivity
         RootView.setVisibility(View.GONE);
 
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         fixInvisibility();
 
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser fbUser = mAuth.getCurrentUser();
         setUpFAB();
         feedLayout = findViewById(R.id.feedLayout);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -106,6 +106,11 @@ public class MainActivity extends AppCompatActivity
 
         showLinkDetails(fbUser, navigationView);
         setUpNewsFeed();
+        setUpRefresh();
+
+
+    }
+    private void setUpRefresh(){
         swipeLayout = findViewById(R.id.swipeRefresh);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -114,18 +119,15 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
-
     }
-
     private void fixInvisibility() {
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View profile = inflater.inflate(R.layout.fragment_profile, null);
-        FrameLayout Layprofile = (FrameLayout) profile.findViewById(R.id.frameProf);
+        FrameLayout Layprofile =  profile.findViewById(R.id.frameProf);
         Layprofile.setVisibility(View.GONE);
         View dashboardView = inflater.inflate(R.layout.fragment_advocte_dashboard, null);
         LayoutInflater.from(this).inflate(R.layout.fragment_advocte_dashboard, null);
-        RelativeLayout dashboard = (RelativeLayout) dashboardView.findViewById(R.id.dashLay);
+        RelativeLayout dashboard = dashboardView.findViewById(R.id.dashLay);
         dashboard.setVisibility(View.GONE);
     }
 
@@ -134,29 +136,23 @@ public class MainActivity extends AppCompatActivity
         query.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                List<String> currentNameArray = new ArrayList<>();
-                List<String> currentLIArray = new ArrayList<>();
-                List<String> currentActivityArray = new ArrayList<>();
-                List<String> currentIssueArray = new ArrayList<>();
-                List<String> currentExtraDetailsArray = new ArrayList<>();
-                List<String> currentDateArray = new ArrayList<>();
 
-                currentIssueArray = (List<String>) documentSnapshot.get(ISSUE_AREA_News);
+                List<String> currentIssueArray = (List<String>) documentSnapshot.get(ISSUE_AREA_News);
                 currentIssueArray = Lists.reverse(currentIssueArray);
 
-                currentLIArray = (List<String>) documentSnapshot.get(LI_URL_NEWS);
+                List<String> currentLIArray = (List<String>) documentSnapshot.get(LI_URL_NEWS);
                 currentLIArray = Lists.reverse(currentLIArray);
 
-                currentActivityArray = (List<String>) documentSnapshot.get(ActivityDescriptions_NEWS);
+                List<String> currentActivityArray = (List<String>) documentSnapshot.get(ActivityDescriptions_NEWS);
                 currentActivityArray = Lists.reverse(currentActivityArray);
 
-                currentNameArray = (List<String>) documentSnapshot.get(Names_News);
+                List<String> currentNameArray = (List<String>) documentSnapshot.get(Names_News);
                 currentNameArray = Lists.reverse(currentNameArray);
 
-                currentExtraDetailsArray = (List<String>) documentSnapshot.get(EXTRA_DETAILS);
+                List<String> currentExtraDetailsArray = (List<String>) documentSnapshot.get(EXTRA_DETAILS);
                 currentExtraDetailsArray = Lists.reverse(currentExtraDetailsArray);
 
-                currentDateArray = (List<String>) documentSnapshot.get(TIMESTAMP);
+                List<String> currentDateArray = (List<String>) documentSnapshot.get(TIMESTAMP);
                 currentDateArray = Lists.reverse(currentDateArray);
 
                 initRecyclerView(currentNameArray, currentLIArray, currentActivityArray, currentIssueArray, currentExtraDetailsArray, currentDateArray);
@@ -183,9 +179,9 @@ public class MainActivity extends AppCompatActivity
         final Animation hideButton = AnimationUtils.loadAnimation(MainActivity.this, R.anim.hidebutton);
         final Animation showLay = AnimationUtils.loadAnimation(MainActivity.this, R.anim.show_layout);
         final Animation hideLay = AnimationUtils.loadAnimation(MainActivity.this, R.anim.hide_layout);
-        mainFab = (FloatingActionButton) findViewById(R.id.plusfabfab);
-        taskLay = (ConstraintLayout) findViewById(R.id.taskLay);
-        taskLay = (ConstraintLayout) findViewById(R.id.taskLay);
+        mainFab = findViewById(R.id.plusfabfab);
+        taskLay =  findViewById(R.id.taskLay);
+        taskLay = findViewById(R.id.taskLay);
         mainFab.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -262,9 +258,9 @@ public class MainActivity extends AppCompatActivity
                     String liURL = documentSnapshot.getString("linkedinPro");
                     String compString = documentSnapshot.getString("BusinessName");
                     View hView = navView.getHeaderView(0);
-                    ImageView proPic = (ImageView) hView.findViewById(R.id.linkedinphoto);
-                    TextView textInfo = (TextView) hView.findViewById(R.id.username);
-                    TextView companyName = (TextView) hView.findViewById(R.id.CompanyName);
+                    ImageView proPic =  hView.findViewById(R.id.linkedinphoto);
+                    TextView textInfo =  hView.findViewById(R.id.username);
+                    TextView companyName = hView.findViewById(R.id.CompanyName);
 
                     textInfo.setText(name);
                     companyName.setText(compString);
@@ -283,7 +279,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -304,7 +300,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.profile) {
             View dashboardView = inflater.inflate(R.layout.fragment_advocte_dashboard, null);
             LayoutInflater.from(this).inflate(R.layout.fragment_advocte_dashboard, null);
-            RelativeLayout dashboard = (RelativeLayout) dashboardView.findViewById(R.id.dashLay);
+            RelativeLayout dashboard = dashboardView.findViewById(R.id.dashLay);
             dashboard.setVisibility(View.GONE);
 
             android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
@@ -319,7 +315,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.prepare) {
 
             View profile = inflater.inflate(R.layout.fragment_profile, null);
-            FrameLayout Layprofile = (FrameLayout) profile.findViewById(R.id.frameProf);
+            FrameLayout Layprofile = profile.findViewById(R.id.frameProf);
             Layprofile.setVisibility(View.GONE);
             android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
             android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
@@ -360,7 +356,7 @@ public class MainActivity extends AppCompatActivity
             customTabsIntent.launchUrl(this, Uri.parse(youtube));
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
