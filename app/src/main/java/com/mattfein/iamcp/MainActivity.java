@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity
     private static final String LI_URL_NEWS = "LIUrls";
     private static final String ActivityDescriptions_NEWS = "ActivityDescriptions";
     private static final String EXTRA_DETAILS = "extraDetails";
+    private static final String TIMESTAMP = "TimeStamps";
 
     ConstraintLayout  taskLay;
     RelativeLayout feedLayout;
@@ -80,12 +81,14 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         isVisible = true;
         super.onCreate(savedInstanceState);
+        View RootView = this.findViewById(android.R.id.content).getRootView();
+        RootView.setVisibility(View.GONE);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         fixInvisibility();
-
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -136,6 +139,7 @@ public class MainActivity extends AppCompatActivity
                 List<String> currentActivityArray = new ArrayList<>();
                 List<String> currentIssueArray = new ArrayList<>();
                 List<String> currentExtraDetailsArray = new ArrayList<>();
+                List<String> currentDateArray = new ArrayList<>();
 
                 currentIssueArray = (List<String>) documentSnapshot.get(ISSUE_AREA_News);
                 currentIssueArray = Lists.reverse(currentIssueArray);
@@ -151,17 +155,21 @@ public class MainActivity extends AppCompatActivity
 
                 currentExtraDetailsArray = (List<String>) documentSnapshot.get(EXTRA_DETAILS);
                 currentExtraDetailsArray = Lists.reverse(currentExtraDetailsArray);
-                initRecyclerView(currentNameArray, currentLIArray, currentActivityArray, currentIssueArray, currentExtraDetailsArray);
+
+                currentDateArray = (List<String>) documentSnapshot.get(TIMESTAMP);
+                currentDateArray = Lists.reverse(currentDateArray);
+
+                initRecyclerView(currentNameArray, currentLIArray, currentActivityArray, currentIssueArray, currentExtraDetailsArray, currentDateArray);
             }
         });
 
     }
 
-    private void initRecyclerView(List<String> currentNameArray, List<String> currentLIArray, List<String> currentActivityArray, List<String> currentIssueArray, List<String> currentExtraArray){
+    private void initRecyclerView(List<String> currentNameArray, List<String> currentLIArray, List<String> currentActivityArray, List<String> currentIssueArray, List<String> currentExtraArray, List<String> currentDateArray){
         Log.d("Main Activity: ", "initRecyclerView");
         RecyclerView recyclerView = findViewById(R.id.newsfeedrecycle);
 
-        NewsFeedAdapter adapter = new NewsFeedAdapter(this, currentNameArray, currentIssueArray, currentActivityArray, currentLIArray, currentExtraArray);
+        NewsFeedAdapter adapter = new NewsFeedAdapter(this, currentNameArray, currentIssueArray, currentActivityArray, currentLIArray, currentExtraArray, currentDateArray);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         swipeLayout.setRefreshing(false);

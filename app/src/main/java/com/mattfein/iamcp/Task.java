@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -27,7 +28,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +57,7 @@ public class Task extends AppCompatActivity {
     private static final String USER_LI_LINK = "linkedinPro";
 
     //NewsFeed
+    private static final String TIMESTAMP = "TimeStamps";
     private static final String ISSUE_AREA_News = "IssueAreas";
     private static final String Names_News = "Names";
     private static final String EXTRADETAILS = "extraDetails";
@@ -61,8 +66,9 @@ public class Task extends AppCompatActivity {
     private static final String ActivityDescriptions_NEWS = "ActivityDescriptions";
 
     private Boolean isOther = false;
-
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    String stringDate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +85,11 @@ public class Task extends AppCompatActivity {
         Button submitButton = (Button) findViewById(R.id.submitButton);
         mAuth = FirebaseAuth.getInstance();
         final FirebaseUser fbUser = mAuth.getCurrentUser();
+        Date date = new Date();
+        stringDate = new SimpleDateFormat("MM/dd/yyyy").format(date);
 
         final String fbUserEmail = fbUser.getEmail();
-        Log.e("Emaill", fbUserEmail);
+        Log.e("Email", fbUserEmail);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,23 +136,136 @@ public class Task extends AppCompatActivity {
                     for (DocumentSnapshot document : task.getResult()) {
                         String email = document.getString(ADVOCATE_USER);
                         if (fbUser.equals(finalEmail)) {
+                            DocumentReference user = db.collection("Task").document(finalEmail);
+                            user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    if (activityType.equals("Emailed a lawmaker")){
+                                        Long CurrentPoints = (Long) documentSnapshot.get(POINT_VALUE);
+                                        if(CurrentPoints == null){
+                                            CurrentPoints = (long) 10;
+
+                                        }
+                                        else{
+                                            CurrentPoints = CurrentPoints + 10;
+                                        }
+                                        Log.e("CurrentPoints", Long.toString(CurrentPoints) );
+                                        db.collection("Task").document(fbUser).update(POINT_VALUE, CurrentPoints)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(Task.this, "Report Submitted", Toast.LENGTH_SHORT).show();
+                                                        finish();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(Task.this, "Report Not Submitted", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
+                                    }
+                                    if(activityType.equals("Called a lawmaker")){
+                                        Long CurrentPoints = (Long) documentSnapshot.get(POINT_VALUE);
+                                        CurrentPoints = CurrentPoints + 20;
+                                        db.collection("Task").document(fbUser).update(POINT_VALUE, CurrentPoints)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(Task.this, "Report Submitted", Toast.LENGTH_SHORT).show();
+                                                        finish();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(Task.this, "Report Not Submitted", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
+                                    }
+                                    if(activityType.equals("Met with a lawmaker")){
+                                        Long CurrentPoints = (Long) documentSnapshot.get(POINT_VALUE);
+                                        CurrentPoints = CurrentPoints + 30;
+                                        db.collection("Task").document(fbUser).update(POINT_VALUE, CurrentPoints)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(Task.this, "Report Submitted", Toast.LENGTH_SHORT).show();
+                                                        finish();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(Task.this, "Report Not Submitted", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
+                                    }
+                                    if(activityType.equals("Wrote an Op-Ed")){
+                                        Long CurrentPoints = (Long) documentSnapshot.get(POINT_VALUE);
+                                        CurrentPoints = CurrentPoints + 40;
+                                        db.collection("Task").document(fbUser).update(POINT_VALUE, CurrentPoints)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(Task.this, "Report Submitted", Toast.LENGTH_SHORT).show();
+                                                        finish();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(Task.this, "Report Not Submitted", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
+                                    }
+                                    if(activityType.equals("Attended an event")){
+                                        Long CurrentPoints = (Long) documentSnapshot.get(POINT_VALUE);
+                                        CurrentPoints = CurrentPoints + 10;
+                                        db.collection("Task").document(fbUser).update(POINT_VALUE, CurrentPoints)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(Task.this, "Report Submitted", Toast.LENGTH_SHORT).show();
+                                                        finish();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(Task.this, "Report Not Submitted", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
+                                    }
+                                    if(activityType.equals("Raised money")){
+                                        Long CurrentPoints = (Long) documentSnapshot.get(POINT_VALUE);
+                                        CurrentPoints = CurrentPoints + 30;
+                                        db.collection("Task").document(fbUser).update(POINT_VALUE, CurrentPoints)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(Task.this, "Report Submitted", Toast.LENGTH_SHORT).show();
+                                                        finish();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(Task.this, "Report Not Submitted", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                    }
+                                }
+                            });
                             shouldCreCheck = 1;
                             Log.d("TAG", "Username found");
                             getCurrentArray(fbUser, finalIssueArea, activityType, finalTaskDescription);
-                            db.collection("Task").document(fbUser).update(POINT_VALUE, 30)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Toast.makeText(Task.this, "Report Submitted", Toast.LENGTH_SHORT).show();
-                                            finish();
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(Task.this, "Report Not Submitted", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+
                         }
                     }
                     //User not found, create new user
@@ -166,8 +287,11 @@ public class Task extends AppCompatActivity {
                         taskMap.put(DESCRIPTION_ARRAY, activityDescription);
                         taskMap.put(ACTIVITY_TYPE, activityTypeList);
                         taskMap.put(POINT_VALUE, 10);
+
                         db.collection("Task").document(fbUser).set(taskMap);
                         final DocumentReference query = db.collection("Task").document(fbUser);
+
+
                         query.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -196,12 +320,15 @@ public class Task extends AppCompatActivity {
                 List<String> currentActivityArray = new ArrayList<>();
                 List<String> currentIssueArray = new ArrayList<>();
                 List<String> currentExtraArray = new ArrayList<>();
+                List<String> currentTimeStampArray = new ArrayList<>();
+
 
                 currentIssueArray = (List<String>) documentSnapshot.get(ISSUE_AREA_News);
                 currentLIArray = (List<String>) documentSnapshot.get(LI_URL_NEWS);
                 currentActivityArray = (List<String>) documentSnapshot.get(ActivityDescriptions_NEWS);
                 currentNameArray = (List<String>) documentSnapshot.get(Names_News);
                 currentExtraArray = (List<String>) documentSnapshot.get(EXTRADETAILS);
+                currentTimeStampArray = (List<String>) documentSnapshot.get(TIMESTAMP);
 
                 currentActivityArray.add(activityType);
                 currentNameArray.add(Name);
@@ -209,11 +336,14 @@ public class Task extends AppCompatActivity {
                 currentExtraArray.add(activityDescription);
                 currentIssueArray.add(finalIssueArea);
 
+                currentTimeStampArray.add(stringDate);
+
                 db.collection("NewsFeed").document("NdhRlwTPvHUH8kerFyU5").update(ISSUE_AREA_News, currentIssueArray);
                 db.collection("NewsFeed").document("NdhRlwTPvHUH8kerFyU5").update(ActivityDescriptions_NEWS, currentActivityArray);
                 db.collection("NewsFeed").document("NdhRlwTPvHUH8kerFyU5").update(EXTRADETAILS, currentExtraArray);
                 db.collection("NewsFeed").document("NdhRlwTPvHUH8kerFyU5").update(Names_News, currentNameArray);
                 db.collection("NewsFeed").document("NdhRlwTPvHUH8kerFyU5").update(LI_URL_NEWS, currentLIArray);
+                db.collection("NewsFeed").document("NdhRlwTPvHUH8kerFyU5").update(TIMESTAMP, currentTimeStampArray);
 
 
             }
@@ -230,27 +360,25 @@ public class Task extends AppCompatActivity {
                 List<String> newIssueArray = new ArrayList<>();
                 List<String> newActivityArray = new ArrayList<>();
                 List<String> newExtraDetailsArray = new ArrayList<>();
+                List<String> newDatesArray = new ArrayList<>();
+
+
                 if (documentSnapshot.exists()) {
-                    if (documentSnapshot.get(ACTIVITY_TYPE).equals("new")) {
 
-                        newExtraDetailsArray.add(newExtraDetails);
-                        newActivityArray.add(newActivityType);
-                        newIssueArray.add(newIssueArea);
-
-
-                    } else {
-                        newIssueArray = (List<String>) documentSnapshot.get(ISSUE_AREA);
-                        newActivityArray = (List<String>) documentSnapshot.get(ACTIVITY_TYPE);
-                        newExtraDetailsArray = (List<String>) documentSnapshot.get(DESCRIPTION_ARRAY);
-                        newIssueArray.add(newIssueArea);
-                        newActivityArray.add(newActivityType);
-                        newExtraDetailsArray.add(newExtraDetails);
-                    }
+                    newIssueArray = (List<String>) documentSnapshot.get(ISSUE_AREA);
+                    newActivityArray = (List<String>) documentSnapshot.get(ACTIVITY_TYPE);
+                    newExtraDetailsArray = (List<String>) documentSnapshot.get(DESCRIPTION_ARRAY);
+                    newDatesArray = (List<String>) documentSnapshot.get(TIMESTAMP);
+                    newIssueArray.add(newIssueArea);
+                    newActivityArray.add(newActivityType);
+                    newDatesArray.add(stringDate);
+                    newExtraDetailsArray.add(newExtraDetails);
 
                     db.collection("Task").document(userEmail).update(ACTIVITY_TYPE, newActivityArray);
                     db.collection("Task").document(userEmail).update(ISSUE_AREA, newIssueArray);
                     db.collection("Task").document(userEmail).update(USEREXTRA, newExtraDetailsArray);
                     db.collection("Task").document(userEmail).update(DESCRIPTION_ARRAY, newExtraDetailsArray);
+                    db.collection("Task").document(userEmail).update(TIMESTAMP, newDatesArray);
 
                     String currentName = documentSnapshot.getString("Name");
                     String liLink = documentSnapshot.getString("linkedinPro");

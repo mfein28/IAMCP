@@ -8,6 +8,7 @@
     android:layout_marginBottom="10dp">
     <android.support.v7.widget.CardView
         android:layout_width="350dp"
+        android:id="@+id/moreinforCard"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_gravity="center_horizontal"
@@ -29,6 +30,7 @@
             <TextView
                 android:id="@+id/ExpandListItem"
                 android:layout_width="wrap_content"
+                android:textColor="@color/white"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="8dp"
@@ -37,7 +39,7 @@
                 android:paddingLeft="15dp"
                 android:paddingTop="15dp"
                 android:text="EXAMPEpsjgk;asjk'sgjagdfsdlkfjasdklhfsjldghsakl;dghsk;dHFAS;LDFHASJLDFHASLKDHA'FLGJV'"
-                android:textSize="16dip"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

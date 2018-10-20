@@ -47,12 +47,17 @@
     </string-array>
     
     <string-array name="activityType">
-        <item>Interact with a lawmaker</item>
-        <item>Connect with a partner</item>
-        <item>Raise money</item>
-        <item>Get media attention</item>
+        <item>Emailed a lawmaker</item>
+        <item>Called a lawmaker</item>
+        <item>Met with a lawmaker</item>
+        <item>Wrote an Op-Ed</item>
+        <item>Attended an event</item>
+        <item>Raised money</item>
     </string-array>
     
     <!-- TODO: Remove or change this placeholder textm -->
      <string name="hello_blank_fragment">Hello blank fragment</string>
-     </resources>
+    <string name="matt_fein">Matt Fein</string>
+    <string name="interacted_with_congressman">Interacted with Congressman</string>
+    <string name="computer_science_education">Computer Science Education</string>
+</resources>

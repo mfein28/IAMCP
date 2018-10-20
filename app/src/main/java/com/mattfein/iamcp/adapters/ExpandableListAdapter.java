@@ -77,14 +77,20 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         String headerTitle = (String) getGroup(groupPosition);
+        TextView listHeader;
+        ImageView image;
+        CardView card;
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_group, null);
+            listHeader = (TextView) convertView.findViewById(R.id.listheader);
+            image = (ImageView) convertView.findViewById(R.id.AdvocateImage);
+            card = (CardView) convertView.findViewById(R.id.listcard);
 
         }
-        TextView listHeader = (TextView) convertView.findViewById(R.id.listheader);
-        ImageView image = (ImageView) convertView.findViewById(R.id.AdvocateImage);
-        CardView card = (CardView) convertView.findViewById(R.id.listcard);
+        listHeader = (TextView) convertView.findViewById(R.id.listheader);
+        image = (ImageView) convertView.findViewById(R.id.AdvocateImage);
+        card = (CardView) convertView.findViewById(R.id.listcard);
         if(groupPosition == 0){
             image.setImageResource(R.drawable.phone);
             listHeader.setTextColor(context.getResources().getColor(R.color.white));
@@ -128,27 +134,33 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         final String childText = (String) getChild(groupPosition, childPosition);
-
+        CardView card;
         if (convertView == null){
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.expandlistitem, null);
+            card = (CardView) convertView.findViewById(R.id.moreinforCard);
         }
         TextView txtChild = (TextView) convertView.findViewById(R.id.ExpandListItem);
+        card = (CardView) convertView.findViewById(R.id.moreinforCard);
         if(groupPosition == 0){
             txtChild.setText(Html.fromHtml((convertView.getResources().getString(R.string.telephoning_gov))));
+            card.setCardBackgroundColor(context.getResources().getColor(R.color.gray));
             iterateAdovocate();
         }
         if(groupPosition == 1){
             txtChild.setText(Html.fromHtml((convertView.getResources().getString(R.string.emailing_gov))));
+            card.setCardBackgroundColor(context.getResources().getColor(R.color.colorLight));
             iterateAdovocate();
         }
         if(groupPosition == 2){
             txtChild.setText(Html.fromHtml((convertView.getResources().getString(R.string.writing_oped))));
+            card.setCardBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
             iterateAdovocate();
         }
         if(groupPosition == 3){
 
             txtChild.setText(Html.fromHtml((convertView.getResources().getString(R.string.schedule_meet))));
+            card.setCardBackgroundColor(context.getResources().getColor(R.color.gray));
             iterateAdovocate();
         }
 

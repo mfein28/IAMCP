@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static final String ORGANIZATION_NAME = "BusinessName";
     private static final String USER_EMAIL = "advocateUser";
     private static final String LIProfilePic = "linkedinPro";
-
+    private static final String TIMESTAMP = "TimeStamps";
 
     public FirebaseAuth mAuth;
     FirebaseUser currentUser;
@@ -256,17 +256,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     String pictureUrl = jsonObject.getString("pictureUrl");
                                     String emailAddress = email;
 
-                                    Map<String, Object> userDetails = new HashMap<>();
+                                    ArrayList<String> DescriptionArray = new ArrayList<>();
+                                    ArrayList<String> ActivityArray = new ArrayList<>();
+                                    ArrayList<String> IssueArray = new ArrayList<>();
+                                    ArrayList<String> DatesArray = new ArrayList<>();
+
+                                     Map<String, Object> userDetails = new HashMap<>();
                                     userDetails.put(Name, firstName + " " + lastName);
                                     userDetails.put(REPCOUNT, 0);
                                     userDetails.put(POLICYCOUNT, 0);
                                     userDetails.put(ADVOCACYCOUNT, 0);
                                     userDetails.put(USER_EMAIL, emailAddress);
                                     userDetails.put(LIProfilePic, pictureUrl);
-                                    userDetails.put(DESCRIPTION_ARRAY, "new");
-                                    userDetails.put(ACTIVITY_TYPE, "new");
-                                    userDetails.put(ISSUE_AREA, "new");
+                                    userDetails.put(DESCRIPTION_ARRAY,DescriptionArray);
+                                    userDetails.put(ACTIVITY_TYPE, ActivityArray);
+                                    userDetails.put(ISSUE_AREA, IssueArray);
                                     userDetails.put(ORGANIZATION_NAME, companyName);
+                                    userDetails.put(TIMESTAMP, DatesArray);
 
                                     db.collection("Task").document(email).set(userDetails);
 

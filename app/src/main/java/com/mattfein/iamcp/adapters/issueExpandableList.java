@@ -124,6 +124,7 @@ public class issueExpandableList extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         final String childText = (String) getChild(groupPosition, childPosition);
+        CardView card;
         if (convertView == null){
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.whitespaceslay, null);
@@ -131,23 +132,28 @@ public class issueExpandableList extends BaseExpandableListAdapter {
             TextView title = (TextView) convertView.findViewById(R.id.issueTitle);
             TextView content2 = (TextView) convertView.findViewById(R.id.content2);
             ImageView contentImage = (ImageView) convertView.findViewById(R.id.issueImage);
+            card = (CardView) convertView.findViewById(R.id.moreinforCard);
+
 
         }
         TextView content = (TextView) convertView.findViewById(R.id.content);
         TextView title = (TextView) convertView.findViewById(R.id.issueTitle);
         TextView content2 = (TextView) convertView.findViewById(R.id.content2);
         ImageView contentImage = (ImageView) convertView.findViewById(R.id.issueImage);
+        card = (CardView) convertView.findViewById(R.id.moreinforCard);
         if(groupPosition == 0){
             iteratePolicy();
            content.setText(context.getResources().getString(R.string.tv_whitespace));
            title.setText(context.getResources().getString(R.string.white_title));
            content2.setText(context.getResources().getString(R.string.tv_whitespacetwo));
+           card.setCardBackgroundColor(context.getResources().getColor(R.color.gray));
            contentImage.setImageDrawable(context.getResources().getDrawable(R.drawable.whitespacegraphic));
         }
         if(groupPosition == 1){
             iteratePolicy();
             content.setText(context.getResources().getString(R.string.cs_ed));
             title.setText(context.getResources().getString(R.string.cs_title));
+            card.setCardBackgroundColor(context.getResources().getColor(R.color.colorLight));
             content2.setText(" ");
             contentImage.setImageDrawable(context.getResources().getDrawable(R.drawable.csedimage));
 
@@ -158,6 +164,7 @@ public class issueExpandableList extends BaseExpandableListAdapter {
             content.setText(context.getResources().getString(R.string.intellectualprop));
             title.setText(context.getResources().getString(R.string.iptitle));
             content2.setText(" ");
+            card.setCardBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
             contentImage.setImageDrawable(context.getResources().getDrawable(R.drawable.intellectualprop));
 
 
@@ -168,6 +175,7 @@ public class issueExpandableList extends BaseExpandableListAdapter {
             title.setText(context.getResources().getString(R.string.dataprivacytitle));
             content2.setText(context.getResources().getString(R.string.microsoftwarrantcase));
             contentImage.setImageDrawable(context.getResources().getDrawable(R.drawable.cloudact));
+            card.setCardBackgroundColor(context.getResources().getColor(R.color.gray));
 
         }
 

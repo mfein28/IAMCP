@@ -28,6 +28,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.mattfein.iamcp.adapters.ProfileAdapter;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,13 +44,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class Profile extends Fragment {
 
     FirebaseAuth firebaseAuth;
-    TextView name, organization, primaryConcern, numTasks;
+    TextView name, organization, primaryConcern, numTasks, usersScore;
     CircleImageView proPic;
     String fbUserEmail;
     FirebaseUser fbUser;
+    String stringScore;
     private static final String ISSUE_AREA = "issueArea";
     private static final String ORGANIZATION_NAME = "BusinessName";
     private static final String activityType = "activityType";
+    private static final String POINT_VALUE = "pointValue";
     FirebaseAuth mAuth;
     RecyclerView proNews;
     Map.Entry<String, Integer> mainInterest = null;
@@ -120,6 +124,7 @@ public class Profile extends Fragment {
         primaryConcern = (TextView) view.findViewById(R.id.primary_policy_concern_title);
         numTasks = (TextView) view.findViewById(R.id.numbersubited);
         proPic = (CircleImageView) view.findViewById(R.id.profileImage);
+        usersScore = (TextView) view.findViewById(R.id.usersScore);
         DocumentReference user = db.collection("Task").document(userEmail);
         user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -127,6 +132,14 @@ public class Profile extends Fragment {
                  String liLink = documentSnapshot.getString("linkedinPro");
                  String organizationName = documentSnapshot.getString(ORGANIZATION_NAME);
                  String currentName = documentSnapshot.getString("Name");
+                 Long currentUserScore = (Long) documentSnapshot.get(POINT_VALUE);
+                 if(currentUserScore !=  null){
+                     stringScore = Long.toString(currentUserScore);
+                 }
+                 else{
+                     stringScore = "0";
+                 }
+
                  List<String> taskList = new ArrayList<String>();
                  if(documentSnapshot.get(ISSUE_AREA) instanceof String){
 
@@ -158,13 +171,22 @@ public class Profile extends Fragment {
                      numTasks.setText("0");
                      Log.e("Task Count", "Error");
                  }
-                final String mainInterestString = mainInterest.getKey();
+
+                 String mainInterestString;
+                 if(mainInterest != null){
+                     mainInterestString = mainInterest.getKey();
+                 }
+                 else{
+                     mainInterestString = "No Reports Submitted";
+                 }
+
                  final String stringtaskCount = Integer.toString(taskCount);
                  Log.e("This is task:", stringtaskCount);
                  Log.e("This is userName:", currentName);
                  name.setText(currentName);
                  organization.setText(organizationName);
                  numTasks.setText(stringtaskCount);
+                 usersScore.setText(stringScore);
                  primaryConcern.setText(mainInterestString);
                  Picasso.get().load(liLink).into(proPic);
 
