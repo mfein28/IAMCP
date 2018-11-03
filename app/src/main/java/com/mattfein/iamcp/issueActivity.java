@@ -36,7 +36,7 @@ public class issueActivity extends AppCompatActivity {
 
         listView = (ExpandableListView) currentView.findViewById(R.id.advocateList);
         initAdapter();
-        listAdapter = new issueExpandableList(this, listDataHeader, listHash, fbUserEmail);
+        listAdapter = new issueExpandableList(this, listDataHeader, listHash, fbUserEmail, listView);
         listView.setAdapter(listAdapter);
     }
 

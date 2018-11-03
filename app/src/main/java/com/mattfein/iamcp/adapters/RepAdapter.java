@@ -3,6 +3,7 @@ package com.mattfein.iamcp.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
@@ -90,7 +91,12 @@ public class RepAdapter extends RecyclerView.Adapter<RepAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull RepAdapter.ViewHolder holder, int position) {
         Log.e("This is link", mRepPicsList.get(position));
-        Picasso.get().load(mRepPicsList.get(position)).into(holder.repImage);
+        try {
+            Picasso.get().load(mRepPicsList.get(position)).into(holder.repImage);
+        }
+        catch (IllegalArgumentException e){
+            Picasso.get().load(R.drawable.iamcp);
+        }
         holder.phoneNumber.setText(mPhone.get(position));
         holder.name.setText(mNames.get(position));
         String whichParty = mParties.get(position);

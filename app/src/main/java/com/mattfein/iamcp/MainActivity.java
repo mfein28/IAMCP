@@ -121,14 +121,14 @@ public class MainActivity extends AppCompatActivity
 
     }
     private void fixInvisibility() {
-        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View profile = inflater.inflate(R.layout.fragment_profile, null);
-        FrameLayout Layprofile =  profile.findViewById(R.id.frameProf);
-        Layprofile.setVisibility(View.GONE);
-        View dashboardView = inflater.inflate(R.layout.fragment_advocte_dashboard, null);
-        LayoutInflater.from(this).inflate(R.layout.fragment_advocte_dashboard, null);
-        RelativeLayout dashboard = dashboardView.findViewById(R.id.dashLay);
-        dashboard.setVisibility(View.GONE);
+//        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        View profile = inflater.inflate(R.layout.fragment_profile, null);
+//        RelativeLayout Layprofile =  profile.findViewById(R.id.frameprof);
+//        Layprofile.setVisibility(View.GONE);
+//        View dashboardView = inflater.inflate(R.layout.fragment_advocte_dashboard, null);
+//        LayoutInflater.from(this).inflate(R.layout.fragment_advocte_dashboard, null);
+//        RelativeLayout dashboard = dashboardView.findViewById(R.id.dashLay);
+//        dashboard.setVisibility(View.GONE);
     }
 
     private void setUpNewsFeed() {
@@ -315,7 +315,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.prepare) {
 
             View profile = inflater.inflate(R.layout.fragment_profile, null);
-            FrameLayout Layprofile = profile.findViewById(R.id.frameProf);
+            ConstraintLayout Layprofile = profile.findViewById(R.id.frameprof);
             Layprofile.setVisibility(View.GONE);
             android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
             android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();

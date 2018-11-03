@@ -67,7 +67,6 @@ public class Task extends AppCompatActivity {
 
     private Boolean isOther = false;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    String stringDate;
 
 
     @Override
@@ -85,8 +84,7 @@ public class Task extends AppCompatActivity {
         Button submitButton = (Button) findViewById(R.id.submitButton);
         mAuth = FirebaseAuth.getInstance();
         final FirebaseUser fbUser = mAuth.getCurrentUser();
-        Date date = new Date();
-        stringDate = new SimpleDateFormat("MM/dd/yyyy").format(date);
+
 
         final String fbUserEmail = fbUser.getEmail();
         Log.e("Email", fbUserEmail);
@@ -101,6 +99,8 @@ public class Task extends AppCompatActivity {
     }
 
     private void saveTask(final String fbUser, EditText otherText) {
+        Date date = new Date();
+        final String stringDate = new SimpleDateFormat("MM/dd/yyyy").format(date);
         String issueArea = null;
         String extraDetails = null;
         String taskDescription = null;
@@ -311,6 +311,8 @@ public class Task extends AppCompatActivity {
 
 
     private void setNewsArray(final String Name, final String finalIssueArea, final String activityType, final String activityDescription, final String LIURL) {
+        Date date = new Date();
+        final String stringDate = new SimpleDateFormat("MM/dd/yyyy").format(date);
         DocumentReference query = db.collection("NewsFeed").document("NdhRlwTPvHUH8kerFyU5");
         query.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -353,6 +355,8 @@ public class Task extends AppCompatActivity {
     }
 
     private void getCurrentArray(final String userEmail, final String newIssueArea, final String newActivityType, final String newExtraDetails) {
+        Date date = new Date();
+        final String stringDate = new SimpleDateFormat("MM/dd/yyyy").format(date);
         final DocumentReference query = db.collection("Task").document(userEmail);
         query.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override

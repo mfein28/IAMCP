@@ -4,6 +4,7 @@ package com.mattfein.iamcp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.mattfein.iamcp.adapters.AchievementAdapter;
 import com.mattfein.iamcp.adapters.ProfileAdapter;
 import com.squareup.picasso.Picasso;
 
@@ -49,16 +52,21 @@ public class Profile extends Fragment {
     String fbUserEmail;
     FirebaseUser fbUser;
     String stringScore;
+    FirebaseAuth mAuth;
+    RecyclerView proNews;
+    Map.Entry<String, Integer> mainInterest = null;
+    int taskCount;
+
+
+
+    private static final String ACHIEVMENTS = "UserAchievments";
     private static final String ISSUE_AREA = "issueArea";
     private static final String ORGANIZATION_NAME = "BusinessName";
     private static final String activityType = "activityType";
     private static final String POINT_VALUE = "pointValue";
-    FirebaseAuth mAuth;
-    RecyclerView proNews;
-    Map.Entry<String, Integer> mainInterest = null;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
    // final String liLink, currentName, organizationName, stringtaskCount;
-    int taskCount;
+
 
     public Profile() {
         // Required empty public constructor
@@ -75,13 +83,55 @@ public class Profile extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         fbUser = mAuth.getCurrentUser();
         fbUserEmail = fbUser.getEmail();
-        FrameLayout frame = view.findViewById(R.id.frameProf);
+        ConstraintLayout frame = view.findViewById(R.id.frameprof);
         frame.setVisibility(View.VISIBLE);
         proNews = (RecyclerView) view.findViewById(R.id.profileRecycle);
         setUpFeed();
         setUpUserProfile(view, fbUserEmail);
+        setUpAchievments(view, fbUserEmail);
         return view;
     }
+
+    private void setUpAchievments(View view, String fbUserEmail) {
+
+        Log.d("Profile", "Setting Up Achievments");
+
+        DocumentReference query = db.collection("Task").document(fbUserEmail);
+
+        query.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                List<String> mAcheivNames = (List<String>) documentSnapshot.get(ACHIEVMENTS);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                RecyclerView achievmentRecycle = view.findViewById(R.id.achievmentRecycle);
+                achievmentRecycle.setLayoutManager(layoutManager);
+                imageQuery(mAcheivNames, achievmentRecycle);
+                Log.e("AchievNames", mAcheivNames.toString());
+            }
+        });
+    }
+
+    private void imageQuery(List<String> achievNames, RecyclerView achievRecycle){
+
+        DocumentReference imageQuery = db.collection("AchievmentImages").document("AchievmentImages");
+        imageQuery.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                List<String> mAcheivLinks = new ArrayList<>();
+                for(int i = 0; i < achievNames.size(); i++){
+                    if(achievNames.get(i).equals("Registered!")){
+                        mAcheivLinks.add((String) documentSnapshot.get("Registered"));
+                    }
+
+                }
+                AchievementAdapter achievementAdapter = new AchievementAdapter(getContext(), achievNames, mAcheivLinks);
+                achievRecycle.setAdapter(achievementAdapter);
+            }
+
+        });
+
+    }
+
 
     private void setUpFeed() {
         DocumentReference query = db.collection("Task").document(fbUserEmail);

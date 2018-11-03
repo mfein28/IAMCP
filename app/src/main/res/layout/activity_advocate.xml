@@ -24,6 +24,7 @@
 
         <ExpandableListView
             android:id="@+id/advocateList"
+            android:animateLayoutChanges="true"
             android:layout_gravity="center_horizontal"
             android:divider="@android:color/transparent"
             android:childDivider="@android:color/transparent"

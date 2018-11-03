@@ -2,6 +2,9 @@ package com.mattfein.iamcp;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -15,6 +18,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.android.volley.Request;
@@ -23,6 +27,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,8 +47,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class repActivity extends AppCompatActivity {
@@ -44,6 +59,7 @@ public class repActivity extends AppCompatActivity {
     ArrayList<Representative> repList = new ArrayList<>();
     private LocationManager locationManager;
     private LocationListener locationListener;
+    String fbUserEmail;
 
 
     @Override
@@ -54,10 +70,12 @@ public class repActivity extends AppCompatActivity {
         window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser fbUser = mAuth.getCurrentUser();
-        final String fbUserEmail = fbUser.getEmail();
-
+        fbUserEmail = fbUser.getEmail();
         setUpAlertDialogue(fbUserEmail);
     }
+
+
+
 
     private void setUpAlertDialogue(String usersEmail) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -66,23 +84,49 @@ public class repActivity extends AppCompatActivity {
         alert.setTitle("Enter an address:");
         final View alertLayout = getLayoutInflater().inflate(R.layout.alertdialog, null);
         alert.setView(alertLayout);
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ADDRESS).setCountry("US")
+                .build();
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.setFilter(typeFilter);
+        AlertDialog alertDialog = alert.show();
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                    @Override
+                    public void onPlaceSelected(Place place) {
+                        // TODO: Get info about the selected place.
+                        CharSequence charSequence = place.getAddress();
+                        Geocoder geocoder = new Geocoder(getApplicationContext());
+                        try
+                        {
+                            List<Address> addresses = geocoder.getFromLocation(place.getLatLng().latitude,place.getLatLng().longitude, 1);
+                            String address = addresses.get(0).getAddressLine(0);
+                            String stringAddress = address;
+                            stringAddress = stringAddress.replace(" ", "+");
+                            stringAddress = stringAddress.replace(",", "");
+                            Log.e("heres address", "Place: " + stringAddress);
+                            getInfo(stringAddress, usersEmail);
+                            alertDialog.dismiss();
 
-        alert.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                EditText address = (EditText) alertLayout.findViewById(R.id.streetAddress);
-                EditText city = (EditText) alertLayout.findViewById(R.id.city);
-                EditText zip = (EditText) alertLayout.findViewById(R.id.zipcode);
-                String stringAddress = address.getText().toString();
-                String stringCity = city.getText().toString();
-                String stringZip = zip.getText().toString();
-                String finalstringAddress = stringAddress + " "+ stringCity + " " + stringZip;
-                getInfo(finalstringAddress, usersEmail);
+
+                        } catch (IOException e)
+                        {
+
+                            e.printStackTrace();
+                        }
 
 
-            }
-        });
 
-        alert.show();
+
+                    }
+
+                    @Override
+                    public void onError(Status status) {
+                        // TODO: Handle the error.
+                        Log.i("Error", "An error occurred: " + status);
+                    }
+                });
+
+
 
 
 
@@ -95,7 +139,6 @@ public class repActivity extends AppCompatActivity {
 
 
     private void getInfo(String address, String userEmail) {
-        address = address.replace(" ", "+");
         String url = "https://www.googleapis.com/civicinfo/v2/representatives?address=" + address + "&includeOffices=true&levels=country&roles=legislatorUpperBody&roles=legislatorLowerBody&key=AIzaSyAmmevt501yRRzhSDBk3m8PY1TuQkVLrNg";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>(){
         ArrayList<String> mNames = new ArrayList<>();
@@ -128,14 +171,16 @@ public class repActivity extends AppCompatActivity {
                                 Log.e("CHaneel", channelMap.toString());
 
                             }
-                            Representative representative = new Representative(
-                                    object.getString("name"),
-                                    object.getString("address"),
-                                    object.getString("party"),
-                                    object.getString("phones").replace("[","").replace("]","").replace("\"", ""),
-                                    object.getString("urls").replace("[", "").replace("]", "").replace("\\", ""),
-                                    object.getString("photoUrl"),
-                                    channelMap);
+                            String repName = object.getString("name");
+                            String repAddress = object.getString("address");
+                            String repParty = object.getString("party");
+                            String repPhones = object.getString("phones").replace("[","").replace("]","").replace("\"", "");
+                            String repUrls = object.getString("urls").replace("[", "").replace("]", "").replace("\\", "");
+                            String repPhotoUrl;
+                            repPhotoUrl = object.optString("photoUrl");
+
+
+                            Representative representative = new Representative(repName, repAddress, repParty, repPhones, repUrls, repPhotoUrl, channelMap);
                             Log.e("RepURL", representative.getUrls());
                             Log.e("Party", representative.getParty());
                             repList.add(representative);

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,17 +27,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listHashMap;
     private String userEmail;
+    private ExpandableListView listView;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
     private static final String ADVOCACYCOUNT = "isAdvocacyRead";
 
-    public ExpandableListAdapter(Context context, List<String> listDataHeader, HashMap<String, List<String>> listHashMap, String userEmail) {
+    public ExpandableListAdapter(Context context, List<String> listDataHeader, HashMap<String, List<String>> listHashMap, String userEmail, ExpandableListView listView) {
         this.context = context;
         this.listDataHeader = listDataHeader;
         this.listHashMap = listHashMap;
         this.userEmail = userEmail;
+        this.listView = listView;
     }
 
     @Override
@@ -134,6 +137,20 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         final String childText = (String) getChild(groupPosition, childPosition);
+        ExpandableListAdapter listAdapter = (ExpandableListAdapter) listView.getExpandableListAdapter();
+
+        //Collapses all except clicked on view
+        listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                for (int g = 0; g < listAdapter.getGroupCount(); g++) {
+                    if (g != groupPosition) {
+                        listView.collapseGroup(g);
+                    }
+                }
+            }
+        });
+
         CardView card;
         if (convertView == null){
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -142,6 +159,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter implements 
         }
         TextView txtChild = (TextView) convertView.findViewById(R.id.ExpandListItem);
         card = (CardView) convertView.findViewById(R.id.moreinforCard);
+
+
         if(groupPosition == 0){
             txtChild.setText(Html.fromHtml((convertView.getResources().getString(R.string.telephoning_gov))));
             card.setCardBackgroundColor(context.getResources().getColor(R.color.gray));

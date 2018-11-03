@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,14 +26,16 @@ public class issueExpandableList extends BaseExpandableListAdapter {
     private HashMap<String, List<String>> listHashMap;
     private String userEmail;
     private static final String POLICYCOUNT = "isPolicyRead";
+    private ExpandableListView listView;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public issueExpandableList(Context context, List<String> listDataHeader, HashMap<String, List<String>> listHashMap, String userEmail) {
+    public issueExpandableList(Context context, List<String> listDataHeader, HashMap<String, List<String>> listHashMap, String userEmail, ExpandableListView listView) {
         this.context = context;
         this.listDataHeader = listDataHeader;
         this.listHashMap = listHashMap;
         this.userEmail = userEmail;
+        this.listView = listView;
     }
 
     @Override
@@ -136,6 +140,21 @@ public class issueExpandableList extends BaseExpandableListAdapter {
 
 
         }
+
+        ExpandableListAdapter listAdapter =  listView.getExpandableListAdapter();
+
+        //Collapses all except clicked on view
+        listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                for (int g = 0; g < listAdapter.getGroupCount(); g++) {
+                    if (g != groupPosition) {
+                        listView.collapseGroup(g);
+                    }
+                }
+            }
+        });
+
         TextView content = (TextView) convertView.findViewById(R.id.content);
         TextView title = (TextView) convertView.findViewById(R.id.issueTitle);
         TextView content2 = (TextView) convertView.findViewById(R.id.content2);
@@ -143,6 +162,7 @@ public class issueExpandableList extends BaseExpandableListAdapter {
         card = (CardView) convertView.findViewById(R.id.moreinforCard);
         if(groupPosition == 0){
             iteratePolicy();
+
            content.setText(context.getResources().getString(R.string.tv_whitespace));
            title.setText(context.getResources().getString(R.string.white_title));
            content2.setText(context.getResources().getString(R.string.tv_whitespacetwo));

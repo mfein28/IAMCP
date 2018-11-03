@@ -75,17 +75,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static final String ISSUE_AREA = "issueArea";
     private static final String ACTIVITY_TYPE = "activityType";
     private static final String DESCRIPTION_ARRAY = "taskDescription";
-
     private static final String REPCOUNT = "isRepRead";
     private static final String POLICYCOUNT = "isPolicyRead";
     private static final String ADVOCACYCOUNT = "isAdvocacyRead";
-
-
     private static final String Name = "Name";
     private static final String ORGANIZATION_NAME = "BusinessName";
     private static final String USER_EMAIL = "advocateUser";
     private static final String LIProfilePic = "linkedinPro";
     private static final String TIMESTAMP = "TimeStamps";
+    private static final String ACHIEVMENTS = "UserAchievments";
 
     public FirebaseAuth mAuth;
     FirebaseUser currentUser;
@@ -260,19 +258,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     ArrayList<String> ActivityArray = new ArrayList<>();
                                     ArrayList<String> IssueArray = new ArrayList<>();
                                     ArrayList<String> DatesArray = new ArrayList<>();
+                                    ArrayList<String> AchievmentArray = new ArrayList<>();
+                                    AchievmentArray.add("Registered!");
+
 
                                      Map<String, Object> userDetails = new HashMap<>();
                                     userDetails.put(Name, firstName + " " + lastName);
-                                    userDetails.put(REPCOUNT, 0);
-                                    userDetails.put(POLICYCOUNT, 0);
-                                    userDetails.put(ADVOCACYCOUNT, 0);
                                     userDetails.put(USER_EMAIL, emailAddress);
                                     userDetails.put(LIProfilePic, pictureUrl);
+                                    userDetails.put(ORGANIZATION_NAME, companyName);
                                     userDetails.put(DESCRIPTION_ARRAY,DescriptionArray);
                                     userDetails.put(ACTIVITY_TYPE, ActivityArray);
                                     userDetails.put(ISSUE_AREA, IssueArray);
-                                    userDetails.put(ORGANIZATION_NAME, companyName);
                                     userDetails.put(TIMESTAMP, DatesArray);
+                                    userDetails.put(ACHIEVMENTS, AchievmentArray);
+                                    userDetails.put(REPCOUNT, 0);
+                                    userDetails.put(POLICYCOUNT, 0);
+                                    userDetails.put(ADVOCACYCOUNT, 0);
 
                                     db.collection("Task").document(email).set(userDetails);
 
