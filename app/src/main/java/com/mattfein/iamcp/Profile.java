@@ -1,12 +1,16 @@
 package com.mattfein.iamcp;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,6 +33,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.mattfein.iamcp.adapters.AchievementAdapter;
 import com.mattfein.iamcp.adapters.ProfileAdapter;
+import com.mattfein.iamcp.adapters.SectionsPageAdapter;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
@@ -53,13 +58,13 @@ public class Profile extends Fragment {
     FirebaseUser fbUser;
     String stringScore;
     FirebaseAuth mAuth;
-    RecyclerView proNews;
     Map.Entry<String, Integer> mainInterest = null;
     int taskCount;
 
+    private SectionsPageAdapter mSectionsPageAdapter;
+    private ViewPager mViewPager;
 
 
-    private static final String ACHIEVMENTS = "UserAchievments";
     private static final String ISSUE_AREA = "issueArea";
     private static final String ORGANIZATION_NAME = "BusinessName";
     private static final String activityType = "activityType";
@@ -74,7 +79,7 @@ public class Profile extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -85,96 +90,45 @@ public class Profile extends Fragment {
         fbUserEmail = fbUser.getEmail();
         ConstraintLayout frame = view.findViewById(R.id.frameprof);
         frame.setVisibility(View.VISIBLE);
-        proNews = (RecyclerView) view.findViewById(R.id.profileRecycle);
-        setUpFeed();
         setUpUserProfile(view, fbUserEmail);
-        setUpAchievments(view, fbUserEmail);
+        mSectionsPageAdapter = new SectionsPageAdapter(getActivity().getSupportFragmentManager());
+        mViewPager = view.findViewById(R.id.viewPager);
+        setUpViewPager(mViewPager);
+        assert mViewPager != null;
+        TabLayout tabLayout = view.findViewById(R.id.profiletabs);
+        tabLayout.setupWithViewPager(mViewPager);
+
         return view;
     }
 
-    private void setUpAchievments(View view, String fbUserEmail) {
 
-        Log.d("Profile", "Setting Up Achievments");
-
-        DocumentReference query = db.collection("Task").document(fbUserEmail);
-
-        query.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                List<String> mAcheivNames = (List<String>) documentSnapshot.get(ACHIEVMENTS);
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-                RecyclerView achievmentRecycle = view.findViewById(R.id.achievmentRecycle);
-                achievmentRecycle.setLayoutManager(layoutManager);
-                imageQuery(mAcheivNames, achievmentRecycle);
-                Log.e("AchievNames", mAcheivNames.toString());
-            }
-        });
-    }
-
-    private void imageQuery(List<String> achievNames, RecyclerView achievRecycle){
-
-        DocumentReference imageQuery = db.collection("AchievmentImages").document("AchievmentImages");
-        imageQuery.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                List<String> mAcheivLinks = new ArrayList<>();
-                for(int i = 0; i < achievNames.size(); i++){
-                    if(achievNames.get(i).equals("Registered!")){
-                        mAcheivLinks.add((String) documentSnapshot.get("Registered"));
-                    }
-
-                }
-                AchievementAdapter achievementAdapter = new AchievementAdapter(getContext(), achievNames, mAcheivLinks);
-                achievRecycle.setAdapter(achievementAdapter);
-            }
-
-        });
-
+    private void setUpViewPager(ViewPager viewPager){
+        SectionsPageAdapter adapter = new SectionsPageAdapter(getActivity().getSupportFragmentManager());
+        adapter.addFragment(new proreporthistoryfrag(), "Report History");
+        adapter.addFragment(new proacheivfrag(), "Achievements");
+        viewPager.setAdapter(adapter);
     }
 
 
-    private void setUpFeed() {
-        DocumentReference query = db.collection("Task").document(fbUserEmail);
-        query.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                List<String> currentTask = new ArrayList<>();
-                List<String> currentType = new ArrayList<>();
-                currentTask = (List<String>) documentSnapshot.get(ISSUE_AREA);
-                currentTask = Lists.reverse(currentTask);
-                Log.e("Currenttask", currentTask.toString());
-                currentType = (List<String>) documentSnapshot.get(activityType);
-                currentType = Lists.reverse(currentType);
-                initRecyclerView(currentTask, currentType);
 
-            }
-        });
-
-    }
-
-    private void initRecyclerView(List<String> currentTask, List<String> currentType){
-        ProfileAdapter adapter = new ProfileAdapter(getContext(), currentType, currentTask);
-        proNews.setAdapter(adapter);
-        proNews.setLayoutManager(new LinearLayoutManager(getContext()));
-    }
 
 
     public void setUpUIElements(View view) {
-        name = (TextView) view.findViewById(R.id.usersname);
-        organization = (TextView) view.findViewById(R.id.organization_name);
-        primaryConcern = (TextView) view.findViewById(R.id.primary_policy_concern_title);
-        numTasks = (TextView) view.findViewById(R.id.numbersubited);
-        proPic = (CircleImageView) view.findViewById(R.id.profileImage);
+        name =  view.findViewById(R.id.usersname);
+        organization = view.findViewById(R.id.organization_name);
+        primaryConcern =  view.findViewById(R.id.primary_policy_concern_title);
+        numTasks =  view.findViewById(R.id.numbersubited);
+        proPic =  view.findViewById(R.id.profileImage);
     }
 
     public void setUpUserProfile(View view, String userEmail){
 
-        name = (TextView) view.findViewById(R.id.usersname);
-        organization = (TextView) view.findViewById(R.id.organization_name);
-        primaryConcern = (TextView) view.findViewById(R.id.primary_policy_concern_title);
-        numTasks = (TextView) view.findViewById(R.id.numbersubited);
-        proPic = (CircleImageView) view.findViewById(R.id.profileImage);
-        usersScore = (TextView) view.findViewById(R.id.usersScore);
+        name =  view.findViewById(R.id.usersname);
+        organization =  view.findViewById(R.id.organization_name);
+        primaryConcern =  view.findViewById(R.id.primary_policy_concern_title);
+        numTasks =  view.findViewById(R.id.numbersubited);
+        proPic =  view.findViewById(R.id.profileImage);
+        usersScore =  view.findViewById(R.id.usersScore);
         DocumentReference user = db.collection("Task").document(userEmail);
         user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override

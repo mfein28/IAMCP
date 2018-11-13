@@ -21,8 +21,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.ViewHolder> {
     private static final String TAG = "AchievmentAdapter";
-    private List<String> mText = new ArrayList<String>();
-    private List<String> mImages = new ArrayList<String>();
+    private List<String> mText;
+    private List<String> mImages;
     private Context mContext;
 
     public AchievementAdapter(Context mContext, List<String> mText, List<String> mImages) {
@@ -43,7 +43,7 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-//        holder.achievText.setText(mText.get(position));
+    holder.achievText.setText(mText.get(position));
         Picasso.get().load(mImages.get(position)).into(holder.achievImage);
         holder.achievImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,12 +61,12 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView achievImage;
-//        TextView achievText;
+        TextView achievText;
 
         public ViewHolder(View itemView) {
             super(itemView);
             achievImage = itemView.findViewById(R.id.achievementImage);
-//            achievText = itemView.findViewById(R.id.achievmentText);
+            achievText = itemView.findViewById(R.id.achievmentText);
         }
     }
 }

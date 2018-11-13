@@ -13,6 +13,7 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
+            app:collapseIcon="@drawable/backarrow"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/white"
@@ -25,6 +26,7 @@
 
                 <ImageView
                     android:id="@+id/media_image"
+                    android:contentDescription="IAMCP Logo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"

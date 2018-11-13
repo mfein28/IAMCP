@@ -4,6 +4,12 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/newsfeed"
+            android:icon="@drawable/homebutton"
+            android:title="Newsfeed"/>
+
         <item
             android:id="@+id/profile"
             android:icon="@drawable/profile"

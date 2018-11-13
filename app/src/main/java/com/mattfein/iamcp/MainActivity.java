@@ -2,6 +2,7 @@ package com.mattfein.iamcp;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,9 +28,11 @@ import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +55,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static boolean isVisible;
-    public static MainActivity mainActivity;
     private FirebaseMessaging fbm;
     private FirebaseAuth mAuth;
 
@@ -88,11 +91,10 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fixInvisibility();
-
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser fbUser = mAuth.getCurrentUser();
         setUpFAB();
@@ -112,24 +114,10 @@ public class MainActivity extends AppCompatActivity
     }
     private void setUpRefresh(){
         swipeLayout = findViewById(R.id.swipeRefresh);
-        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                setUpNewsFeed();
-            }
-        });
+        swipeLayout.setOnRefreshListener(() -> setUpNewsFeed());
 
     }
-    private void fixInvisibility() {
-//        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        View profile = inflater.inflate(R.layout.fragment_profile, null);
-//        RelativeLayout Layprofile =  profile.findViewById(R.id.frameprof);
-//        Layprofile.setVisibility(View.GONE);
-//        View dashboardView = inflater.inflate(R.layout.fragment_advocte_dashboard, null);
-//        LayoutInflater.from(this).inflate(R.layout.fragment_advocte_dashboard, null);
-//        RelativeLayout dashboard = dashboardView.findViewById(R.id.dashLay);
-//        dashboard.setVisibility(View.GONE);
-    }
+
 
     private void setUpNewsFeed() {
         DocumentReference query = db.collection("NewsFeed").document("NdhRlwTPvHUH8kerFyU5");
@@ -223,6 +211,26 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem myActionMenuItem = menu.findItem( R.id.action_search);
+        SearchView searchView = (SearchView) myActionMenuItem.getActionView();
+        EditText searchEditText = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchEditText.setHintTextColor(getResources().getColor(R.color.colorAccent));
+        searchView.setQueryHint("Find other advocates.");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if( ! searchView.isIconified()) {
+                    searchView.setIconified(true);
+                }
+                myActionMenuItem.collapseActionView();
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // UserFeedback.show( "SearchOnQueryTextChanged: " + s);
+                return false;
+            }
+        });
         return true;
     }
 
@@ -296,7 +304,10 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-
+        if(id == R.id.newsfeed){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
         if (id == R.id.profile) {
             View dashboardView = inflater.inflate(R.layout.fragment_advocte_dashboard, null);
             LayoutInflater.from(this).inflate(R.layout.fragment_advocte_dashboard, null);
@@ -360,4 +371,5 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }
